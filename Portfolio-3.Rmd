@@ -85,10 +85,21 @@ Wow! Look at that. Clearly there is a change once new data is introduced. The da
 Ok well now I have quite a lot of graphs here, but perhaps it might be useful to also display the graphs with the spike and the slab. I shall make two graphs, one with the prior spike and slab and one with the posterior spike and slab.
 
 ```{r prior-spike_and_slab}
-spike_prior_graph + geom_line(data = slab_prior, aes(x=x,y=y),
-                        alpha=0.5, color = "red", linewidth = 1.5) + 
+  ggplot() +
+  geom_line(data = spike_prior, aes(x=dMACS,y=Density, color = "Spike"),
+            alpha=0.5, linewidth = 1.5) + 
+  geom_line(data = slab_prior, aes(x=x,y=y, color = "Slab"),
+            alpha=0.5, linewidth = 1.5) + 
   labs (title = "Prior Spike and Slab",
         x = "dMACS",
-        y = "Density")
+        y = "Density",
+        color = "") + 
+  scale_color_manual(values = c("Slab" = "red", "Spike" = "blue" ))
+```
+
+Good. Now let's make the posterior. 
+
+```{r posterior-spike_and_slab}
+
 ```
 
