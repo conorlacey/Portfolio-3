@@ -2,7 +2,7 @@
 title: "Portfolio-3"
 author: "Conor Lacey"
 date: '2023-02-26'
-output: html_document
+output: github_document
 ---
 
 ```{r packages}
