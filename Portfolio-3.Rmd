@@ -1,0 +1,86 @@
+---
+title: "Portfolio-3"
+author: "Conor Lacey"
+date: '2023-02-26'
+output: html_document
+---
+
+```{r packages}
+suppressWarnings(library(tidyverse))
+```
+
+
+### Introduction 
+
+This portfolio is a continuation of my previous one. In this one I want to make graphics that show how exactly the prior and posterior distribution should look for the spike and the slab. 
+
+
+### The Spike
+
+The spike's prior is simply the probability of the effect (in the case of my thesis, this would be dMACS) being zero. Since we weight the spike prior equally to the slab, this should simply be a straight vertical line at 0 with length of 0.5. The y-axis represents the probability 
+
+```{r spike-prior}
+spike_prior <- tribble(~dMACS, ~Density,
+                       0, 0,
+                       0, 0.5)
+
+spike_prior %>% ggplot(aes(x=dMACS,y=Density))+
+  geom_line(color = "blue", linewidth = 1.5) 
+```
+
+Ok this is good, but now let's show what happens when we present data that in favor of it, that is the probability of the effect being zero increases a bit.
+### Calculating dMACS
+
+```{r spike-posterior}
+spike_posterior <- tribble(~dMACS, ~Density,
+                            0, 0,
+                            0, 0.52)
+
+spike_posterior %>% ggplot(aes(x=dMACS,y=Density))+
+  geom_line(color = "blue", linewidth = 1.5) 
+```
+
+Now of course this all doesn't look too interesting, all I did was increase the height of the line. However, now I will show the prior and posterior DISTRIBUTION of the slab and this is where things start to look cool. 
+
+### The Slab
+
+The slab-prior is quite easy. It is just a normal distribution centered at 0 and with standard deviation of 1. 
+
+```{r slab-prior}
+x<-seq(-3,3, length.out = 1e4)
+y<-dnorm(x)
+slab_prior <- tibble(x = x, y = y)
+
+graph<-slab_prior %>% ggplot(aes(x=x,y=y))+
+  geom_line(alpha=0.5, color = "red", linewidth = 1.5)
+graph
+```
+
+Again nothing new, just a normal distribution. However, what if we introduce data that shows that the effect size is not 0 and there is actually an effect occuring. If this is the case, then we should update our prior distribution of the slab. In this case let's assume we calculated a new posterior distribution that is N(.29,.14). 
+
+```{r}
+x<-seq(-3,3, length.out = 1e4)
+y<-dnorm(x,.29,.14)
+y1<- y/max(y)*(.5)
+slab_post <- tibble(x = x, y = y, y1 = y1)
+
+graph +
+  geom_line(data = slab_post, aes(x=x,y=y),
+    alpha=0.5, color = "black", linewidth = 1.5) +
+  geom_line(data = slab_post, aes(x=x,y=y1),
+    alpha=0.5, color = "blue", linewidth = 1.5)
+
+dfLineH1_r$y <- dfLineH1_r$y / max(dfLineH1_r$y) * (1 - upMA[1])
+
+dfunc <- function (x,mu,sd){
+  a = 1/(sqrt(2*pi)*sd)
+  b = exp(-((x - mu)^2/(2*sd^2)))
+  return(a*b)
+}
+
+
+integrate(dfunc(x,0,1),-1.64,1.65)
+```
+
+Wow! Look at that. Clearly there is changed once new data is introduced. 
+
